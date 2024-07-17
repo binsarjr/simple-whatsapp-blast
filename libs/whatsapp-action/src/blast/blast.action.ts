@@ -34,7 +34,7 @@ export class BlastAction extends WhatsappAction {
 
   async execute(event: WASocket, data: any) {
     // TODO: nanti dihapus
-    await this.prisma.blastQueue.deleteMany();
+    // await this.prisma.blastQueue.deleteMany();
 
     this.logger.info('Check if connection is ready');
     if (Object.keys(data).includes('isOnline')) this.isOnline = data.isOnline;
