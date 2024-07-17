@@ -30,16 +30,9 @@ model AuthSessionStore {
   @@index([deviceId])
 }
 
-model WhatsappMessage {
-  jid            String
-  messageId      String
-  messageTimeUtc DateTime
-  meta           String   @default("{}")
-
-  @@id([jid, messageId])
-}
-
-model WhatsappContact {
-  id   String @id
-  name String
+model BlastQueue {
+  id        String  @id @default(cuid())
+  hashGroup String // generate hash group from "content" in yaml
+  jid       String
+  done      Boolean @default(false)
 }

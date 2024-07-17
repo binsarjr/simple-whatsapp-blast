@@ -1,0 +1,33 @@
+name: Simple Whatsapp Blast
+phone_number_dev: 
+  - 62xxxxxx
+
+config:
+  # to make sure connection is ready, wait for 2_0000 ms (2 seconds)
+  connection_delay: 2000
+  message:
+    # delay between each message
+    interval:
+      min: 200
+      max: 500
+  chat:
+    # delay between each chat
+    interval:
+      min: 1000
+      max: 2000
+  
+
+blast:
+  target:
+    - ./devbin/target.txt
+  content:
+    - type: text
+      text: Hello gais dapid disini
+    - type: image
+      # path or link to source media (image or video)
+      source: https://png.pngtree.com/png-clipart/20240412/original/pngtree-indonesian-president-joko-widodo-vector-png-image_14789436.png
+      # caption for the media
+      caption: |
+        Hello gais dapid disini s
+    - type: image
+      source: /Users/mymac/Workspace/binsar/simple-wablast/Indonesian President Joko Widodo.png
