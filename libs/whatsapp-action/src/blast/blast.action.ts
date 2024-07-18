@@ -154,6 +154,15 @@ export class BlastAction extends WhatsappAction {
       try {
         // code action
         await this.actions(event, target);
+
+        await this.prisma.blastQueue.update({
+          where: {
+            id: target.id,
+          },
+          data: {
+            done: true,
+          },
+        });
       } catch (error) {
         this.logger.error(error);
         if (!(await event.onWhatsApp(target.jid))) {
@@ -175,15 +184,6 @@ export class BlastAction extends WhatsappAction {
           });
         }
       }
-
-      await this.prisma.blastQueue.update({
-        where: {
-          id: target.id,
-        },
-        data: {
-          done: true,
-        },
-      });
 
       await delay(
         randomInteger(
