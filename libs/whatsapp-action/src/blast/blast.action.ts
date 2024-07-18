@@ -60,6 +60,9 @@ export class BlastAction extends WhatsappAction {
         line = line.trim();
         line = line.replace(/\s/g, '');
         line = line.replace(/\+/g, '');
+        if (line.startsWith('08')) {
+          line = line.replace('08', '62');
+        }
         if (!/^\d*$/.test(line)) {
           throw new Error(`Invalid phone number: ${line}`);
         }
@@ -199,6 +202,9 @@ export class BlastAction extends WhatsappAction {
       phoneNumberDev = phoneNumberDev.trim();
       phoneNumberDev = phoneNumberDev.replace(/\s/g, '');
       phoneNumberDev = phoneNumberDev.replace(/\+/g, '');
+      if (phoneNumberDev.startsWith('08')) {
+        phoneNumberDev = phoneNumberDev.replace('08', '62');
+      }
 
       await socket.sendMessage(jidEncode(phoneNumberDev, 's.whatsapp.net'), {
         text,
