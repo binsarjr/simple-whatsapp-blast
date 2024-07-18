@@ -182,6 +182,8 @@ export class BlastAction extends WhatsappAction {
               done: true,
             },
           });
+        } else {
+          this.logger.info(error);
         }
       }
 
