@@ -1,4 +1,5 @@
 import { PrismaService } from '@app/prisma';
+import type { WhatsappStoreService } from '@app/whatsapp/core/whatsapp-store.service';
 import { WAEvent } from '@app/whatsapp/decorators/wa-event.decorator';
 import { WhatsappAction } from '@app/whatsapp/interfaces/whatsapp.interface';
 import type { BlastQueue } from '@prisma/client';
@@ -24,6 +25,7 @@ export class BlastAction extends WhatsappAction {
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly whatsappStoreConnection: WhatsappStoreService,
   ) {
     super();
   }
@@ -137,7 +139,11 @@ export class BlastAction extends WhatsappAction {
 
     this.infoDev(event, `Memulai blasting`);
 
+    const device = await this.prisma.device.findFirst();
+    let socket = await this.whatsappStoreConnection.get(device.id).socket;
+
     while (true) {
+      socket = await this.whatsappStoreConnection.get(device.id).socket;
       const target = await this.prisma.blastQueue.findFirst({
         where: {
           hashGroup: this.currentHashGroup,
@@ -146,7 +152,7 @@ export class BlastAction extends WhatsappAction {
       });
 
       if (!target) {
-        await this.infoDev(event, `Blasting selesai`);
+        await this.infoDev(socket, `Blasting selesai`);
 
         process.exit(0);
         break;
@@ -154,7 +160,7 @@ export class BlastAction extends WhatsappAction {
 
       try {
         // code action
-        await this.actions(event, target);
+        await this.actions(socket, target);
 
         await this.prisma.blastQueue.update({
           where: {
@@ -166,12 +172,12 @@ export class BlastAction extends WhatsappAction {
         });
       } catch (error) {
         this.logger.error(error);
-        if (!(await event.onWhatsApp(target.jid))) {
+        if (!(await socket.onWhatsApp(target.jid))) {
           this.logger.warn(
             `Nomor ${target.jid} tidak ada di WhatsApp, melanjutkan`,
           );
           this.infoDev(
-            event,
+            socket,
             `Nomor ${target.jid} tidak ada di WhatsApp, melanjutkan`,
           );
 
@@ -184,7 +190,7 @@ export class BlastAction extends WhatsappAction {
             },
           });
         } else {
-          this.infoDev(event, error);
+          this.infoDev(socket, error);
         }
       }
 
