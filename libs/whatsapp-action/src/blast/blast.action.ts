@@ -1,5 +1,5 @@
 import { PrismaService } from '@app/prisma';
-import type { WhatsappStoreService } from '@app/whatsapp/core/whatsapp-store.service';
+import { WhatsappStoreService } from '@app/whatsapp/core/whatsapp-store.service';
 import { WAEvent } from '@app/whatsapp/decorators/wa-event.decorator';
 import { WhatsappAction } from '@app/whatsapp/interfaces/whatsapp.interface';
 import type { BlastQueue } from '@prisma/client';
